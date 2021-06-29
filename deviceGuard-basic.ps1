@@ -5,6 +5,8 @@ Create Device Guard Policy and enforce
 .Description
 Device Guard has the following requirements:
 
+https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/wdac-and-applocker-overview
+
 Hardware Requirements
 
 UEFI Native Mode
@@ -65,10 +67,10 @@ $IntialCIPolicy = $CIPolicyPath+"\initialScan.xml"
 $CIPolicyBin = $CIPolicyPath+"\SIPolicy.p7b"
 
 #C:\DeviceGuard\CIPolicy.txt - Output from initial policy audit
-$CIPolicyTxt = $CIPolicyPath+"\CIPolicy.txt"
+$CIPolicyError = $CIPolicyPath+"\CIPolicy.txt"
 
 #Creates SIPolicy.p7b based on the IntialCIPolicy.xml
-New-CIPolicy -Level FilePublisher -Fallback Hash -FilePath $IntialCIPolicy -UserPEs 3> $CIPolicyTxt
+New-CIPolicy -Level FilePublisher -Fallback Hash -FilePath $IntialCIPolicy -UserPEs 3> $CIPolicyError
 
 #Enforces UMCI
 Set-RuleOption -FilePath $IntialCIPolicy -Option 0
@@ -81,4 +83,4 @@ Set-RuleOption -FilePath $IntialCIPolicy -Option 3 -delete
 ConvertFrom-CIPolicy -XmlFilePath $IntialCIPolicy  -BinaryFilePath $CIPolicyBin 
 
 #Enfoces Device Guard without a reboot.
-Invoke-CimMethod -Namespace root/Microsoft/Windows/CI -ClassName PS_UpdateAndCompareCIPolicy -MethodName update -Arguments @{filepath = "C:\Windows\System32\CodeIntegrity\SIPolicy.p7b"}
+Invoke-CimMethod -Namespace root/Microsoft/Windows/CI -ClassName PS_UpdateAndCompareCIPolicy -MethodName Update -Arguments @{filepath = "C:\Windows\System32\CodeIntegrity\SIPolicy.p7b"}
