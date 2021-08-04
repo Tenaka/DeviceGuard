@@ -83,4 +83,4 @@ Set-RuleOption -FilePath $IntialCIPolicy -Option 3 -delete
 ConvertFrom-CIPolicy -XmlFilePath $IntialCIPolicy  -BinaryFilePath $CIPolicyBin 
 
 #Enfoces Device Guard without a reboot.
-Invoke-CimMethod -Namespace root/Microsoft/Windows/CI -ClassName PS_UpdateAndCompareCIPolicy -MethodName Update -Arguments @{filepath = "C:\Windows\System32\CodeIntegrity\SIPolicy.p7b"}
+Invoke-CimMethod -Namespace root/Microsoft/Windows/CI -ClassName PS_UpdateAndCompareCIPolicy -MethodName Update -Arguments @{filepath = "$CIPolicyBin"}
