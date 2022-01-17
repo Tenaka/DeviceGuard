@@ -83,5 +83,9 @@ Set-RuleOption -FilePath $IntialCIPolicy -Option 3 -delete
 #GPO is set to move SIPolicy.p7b to C:\Windows\System32\CodeIntegrity
 ConvertFrom-CIPolicy -XmlFilePath $IntialCIPolicy  -BinaryFilePath $CIPolicyBin 
 
+gpupdate /force
+
 #Enable DG to enforce
 Invoke-CimMethod -Namespace root/Microsoft/Windows/CI -ClassName PS_UpdateAndCompareCIPolicy -MethodName update -Arguments @{filepath = "C:\Windows\System32\CodeIntegrity\SIPolicy.p7b"}
+
+#Now reboot 
