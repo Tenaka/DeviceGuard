@@ -48,8 +48,8 @@ Computer Configuration > Administrative Templates > System > Device Guard
     Enable Virtualization Based Protection of Code
         Deploy Code Integrity Policy (enable)
 
-C:\DeviceGuard\SIPolicy.p7b 
-(C:\DeviceGuard\SIPolicy.p7b is automatically copied and converted to C:\Windows\System32\Codeintegrity\)
+C:\DeviceGuard\Initial.bin 
+(C:\DeviceGuard\Initial.bin is automatically copied and converted to C:\Windows\System32\Codeintegrity\)
 
 Applies DG policy without a reboot 
 From PowerShell execute Invoke-CimMethod -Namespace root/Microsoft/Windows/CI -ClassName PS_UpdateAndCompareCIPolicy -MethodName update -Arguments @{filepath = "C:\Windows\system32\CodeIntegrity\SIPolicy.p7b"}
@@ -59,18 +59,19 @@ From PowerShell execute Invoke-CimMethod -Namespace root/Microsoft/Windows/CI -C
 
 #Sets Working Folder for DG
 $CIPolicyPath = "C:\DeviceGuard"
+New-Item -Path $CIPolicyPath -ItemType Directory -Force
 
 #C:\DeviceGuard\InitalScan.xml 
 $IntialCIPolicy = $CIPolicyPath+"\initialScan.xml"
 
-#C:\DeviceGuard\SIPolicy.p7b
-$CIPolicyBin = $CIPolicyPath+"\SIPolicy.p7b"
+#C:\DeviceGuard\SIPolicy.p7b, set the GPO as per above instructions
+$CIPolicyBin = $CIPolicyPath+"\Initial.bin"
 
 #C:\DeviceGuard\CIPolicy.txt - Output from initial policy audit
-$CIPolicyError = $CIPolicyPath+"\CIPolicy.txt"
+$CIPolicyTxt = $CIPolicyPath+"\CIPolicy.txt"
 
 #Creates SIPolicy.p7b based on the IntialCIPolicy.xml
-New-CIPolicy -Level FilePublisher -Fallback Hash -FilePath $IntialCIPolicy -UserPEs 3> $CIPolicyError
+New-CIPolicy -Level FilePublisher -Fallback Hash -FilePath $IntialCIPolicy -UserPEs 3> $CIPolicyTxt
 
 #Enforces UMCI
 Set-RuleOption -FilePath $IntialCIPolicy -Option 0
@@ -82,5 +83,5 @@ Set-RuleOption -FilePath $IntialCIPolicy -Option 3 -delete
 #GPO is set to move SIPolicy.p7b to C:\Windows\System32\CodeIntegrity
 ConvertFrom-CIPolicy -XmlFilePath $IntialCIPolicy  -BinaryFilePath $CIPolicyBin 
 
-#Enfoces Device Guard without a reboot.
-Invoke-CimMethod -Namespace root/Microsoft/Windows/CI -ClassName PS_UpdateAndCompareCIPolicy -MethodName Update -Arguments @{filepath = "$CIPolicyBin"}
+#Enable DG to enforce
+Invoke-CimMethod -Namespace root/Microsoft/Windows/CI -ClassName PS_UpdateAndCompareCIPolicy -MethodName update -Arguments @{filepath = "C:\Windows\System32\CodeIntegrity\SIPolicy.p7b"}
