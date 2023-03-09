@@ -71,7 +71,7 @@ $CIPolicyBin = $CIPolicyPath+"\Initial.bin"
 $CIPolicyTxt = $CIPolicyPath+"\CIPolicy.txt"
 
 #Creates SIPolicy.p7b based on the IntialCIPolicy.xml
-New-CIPolicy -Level FilePublisher -Fallback Hash -FilePath $IntialCIPolicy -UserPEs 3> $CIPolicyTxt -ScanPath C:\
+New-CIPolicy -Level Publisher -Fallback Hash -FilePath $IntialCIPolicy -UserPEs 3> $CIPolicyTxt -ScanPath C:\
 
 #Enforces UMCI
 Set-RuleOption -FilePath $IntialCIPolicy -Option 0
