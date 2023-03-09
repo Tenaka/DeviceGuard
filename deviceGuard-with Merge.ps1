@@ -62,8 +62,8 @@ $HashCIPolicyTxt = $CIPolicyPath+"\HashCIPolicy.txt"
 
 
 #Creates SIPolicy.p7b based on the IntialCIPolicy.xml
-New-CIPolicy -Level FilePublisher -Fallback Hash -FilePath $IntialCIPolicy -UserPEs 3> $CIPolicyTxt -ScanPath C:\
-New-CIPolicy -Level Hash -FilePath $HashCIPolicy -UserPEs 3> $HashCIPolicyTxt -ScanPath "C:\Windows\SystemApps\"
+New-CIPolicy -Level Publisher -Fallback Hash -FilePath $IntialCIPolicy -UserPEs 3> $CIPolicyTxt -ScanPath C:\
+New-CIPolicy -Level Publisher -Fallback Hash -FilePath $HashCIPolicy -UserPEs 3> $HashCIPolicyTxt -ScanPath "C:\Windows\SystemApps\"
 
 
 #Merge the 2 outputs
